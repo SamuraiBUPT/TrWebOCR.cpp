@@ -37,10 +37,10 @@ int tr_recognize(int crnn_id, void* img_ptr, int height, int width, int channel,
 
 // tr_run: 综合运行函数，接收多个参数，返回int类型结果
 int tr_run(int ctpn_id, int crnn_id, 
-           void* img_ptr, int height, int width, int channel, 
+           void* img_ptr, int height, int width, int CV_TYPE, 
            int rotate_flag, 
-           void* rect, int max_lines, 
-           void* unicode, void* probs, int max_width);
+           float* rect, int max_lines, 
+           int* unicode, float* probs, int max_width);
 
 // tr_crnn: CRNN算法函数，接收多个参数，返回int类型结果
 int tr_crnn(int crnn_id, 
