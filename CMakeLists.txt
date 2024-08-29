@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Include the current directory for header files
 include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/3rd_party)
 
 set(CTPN_PATH \"${CMAKE_SOURCE_DIR}/tr/tr/ctpn.bin\")
 set(CRNN_PATH \"${CMAKE_SOURCE_DIR}/tr/tr/crnn.bin\")

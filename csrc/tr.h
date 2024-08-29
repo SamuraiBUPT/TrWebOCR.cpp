@@ -2,7 +2,6 @@
 // Header file for the TR library, declare that these functions have been defined in the library.
 // Author: SamuraiBUPT
 // Date: 2024-08-28
-// Copyright (c) 2024, ChinaDaaS. All rights reserved.
 
 #ifndef TR_H
 #define TR_H

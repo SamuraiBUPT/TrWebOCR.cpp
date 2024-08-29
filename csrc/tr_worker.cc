@@ -28,12 +28,11 @@ std::pair<std::string, float> parse(const int* unicode_arr, const float* prob_ar
 
     float confidence = prob / std::max(count, 1);  // 计算平均置信度
 
-    // std::cout << "text is: " << txt << std::endl;
     return {txt, confidence};
 }
 
-std::vector<Result> process_results(int line_num, float* rect_arr, int* unicode_arr, float* prob_arr) {
-    std::vector<Result> results;
+std::vector<TrResult> process_results(int line_num, float* rect_arr, int* unicode_arr, float* prob_arr) {
+    std::vector<TrResult> results;
 
     for (int i = 0; i < line_num; ++i) {
         int num = static_cast<int>(rect_arr[i * 6 + 5] + 0.5);  // 计算 num
@@ -60,16 +59,19 @@ void TrThreadPool::start(size_t numThreads) {
 
             while (true) {
                 TrTask task;
+                std::shared_ptr<std::promise<std::vector<TrResult>>> promise;
+
                 {
                     std::unique_lock<std::mutex> lock(eventMutex);
 
-                    eventVar.wait(lock, [=]() { return stopFlag || !tasks.empty(); });
+                    eventVar.wait(lock, [=]() { return stopFlag || !task_queue.empty(); });
 
-                    if (stopFlag && tasks.empty())
+                    if (stopFlag && task_queue.empty())
                         break;
 
-                    task = std::move(tasks.front());
-                    tasks.pop();
+                    task = std::move(task_queue.front().first);
+                    promise = task_queue.front().second;
+                    task_queue.pop();
                 }
 
                 // 清空内存
@@ -78,7 +80,11 @@ void TrThreadPool::start(size_t numThreads) {
                 std::fill(prob, prob + 512 * 512, 0.0f);
 
                 // 执行任务，传递给 task 函数
-                int line_num = task(rect, unicode, prob);
+                std::vector<TrResult> results = task(rect, unicode, prob);
+
+                if (promise) {
+                    promise->set_value(results);  // 将结果设置给 promise
+                }
             }
 
             // 释放内存
@@ -101,14 +107,21 @@ void TrThreadPool::stop() {
         thread.join();
 }
 
-void TrThreadPool::enqueue(TrTask task, const char* image_path, int ctpn_id, int crnn_id) {
+std::future<std::vector<TrResult>> TrThreadPool::enqueue(const char* image_path, int ctpn_id, int crnn_id) {
+    auto promise = std::make_shared<std::promise<std::vector<TrResult>>>();
+    auto future = promise->get_future();
+ 
     {
         std::unique_lock<std::mutex> lock(eventMutex);
-        tasks.emplace([=](float* rect, int* unicode, float* prob) {
-            return tr_run_image_from_local(image_path, ctpn_id, crnn_id, rect, unicode, prob);
-        });
+        task_queue.emplace([=](float* rect, int* unicode, float* prob) -> std::vector<TrResult>{
+            int line_num = tr_run_image_from_local(image_path, ctpn_id, crnn_id, rect, unicode, prob);
+            std::vector<TrResult> results = process_results(line_num, rect, unicode, prob);
+            // promise->set_value(results);  // 将结果设置给 promise
+            return results;
+        }, promise);
     }
     eventVar.notify_one();
+    return future;
 }
 
 TrThreadPool::TrThreadPool(size_t numThreads) {
