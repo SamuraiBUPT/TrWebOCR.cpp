@@ -17,6 +17,8 @@ elseif(CMAKE_BUILD_TYPE MATCHES Release)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 endif()
 
+option(USE_GPU "Enable GPU support" OFF)
+
 # Include the current directory for header files
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/3rd_party)
@@ -38,4 +40,10 @@ target_compile_definitions(main PRIVATE CTPN_PATH=${CTPN_PATH})
 target_compile_definitions(main PRIVATE CRNN_PATH=${CRNN_PATH})
 
 # Link the shared library (libtr.so)
-target_link_libraries(main ${CMAKE_SOURCE_DIR}/tr/tr/libtr.so)
+if(USE_GPU)
+    target_link_libraries(main ${CMAKE_SOURCE_DIR}/tr/tr_gpu/libtr.so)
+    target_link_libraries(main ${CMAKE_SOURCE_DIR}/tr/tr_gpu/libonnxruntime.so.1.3.0)
+else()
+    target_link_libraries(main ${CMAKE_SOURCE_DIR}/tr/tr/libtr.so)
+    target_link_libraries(main ${CMAKE_SOURCE_DIR}/tr/tr/libonnxruntime.so.1.3.0)
+endif()
