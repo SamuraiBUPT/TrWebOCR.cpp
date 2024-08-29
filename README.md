@@ -27,6 +27,12 @@ As the release files from [Tr](https://github.com/myhub/tr) has only `.so` files
 
 
 ## TODO
-+ [ ] support inference
++ [x] support inference
 + [ ] GPU support
 + [ ] Image rotation C++ implement.
+
+# Benchmark
+
+Inference 100 requests, the concurrency is 20, CPU mode:
+
+![benchmark1](docs/time_comparison.png)

@@ -152,7 +152,7 @@ int main() {
 
     // test_inference();
 
-    TrThreadPool tr_task_pool(5);
+    TrThreadPool tr_task_pool(6);
 
     int port = 8008;
     Server svr;
@@ -169,9 +169,13 @@ int main() {
             if (json_data.contains("img_path")) {
                 auto img_path = json_data["img_path"].get<std::string>();
 
+                auto start = std::chrono::high_resolution_clock::now();
                 auto future = tr_task_pool.enqueue(img_path.c_str(), ctpn_id, crnn_id);
 
                 std::vector<TrResult> results = future.get();   // inference
+                auto end = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+                std::cout << "耗时：" << duration.count() / 1000.0 << "微秒" << std::endl;
                 
                 std::string result_str;
                 for (const auto& result : results) {

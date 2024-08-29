@@ -1,0 +1,300 @@
+2024/08/29 22:20:08 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:08"}
+[I 240829 22:20:08 tr_run:153] {"time": "2024-08-29 22:20:08"}
+[I 240829 22:20:08 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 336.70ms
+2024/08/29 22:20:09 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 tr_run:153] {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 520.29ms
+2024/08/29 22:20:09 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 tr_run:153] {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 694.67ms
+2024/08/29 22:20:09 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 tr_run:153] {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 872.58ms
+2024/08/29 22:20:09 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 tr_run:153] {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1100.07ms
+2024/08/29 22:20:09 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 tr_run:153] {"time": "2024-08-29 22:20:09"}
+[I 240829 22:20:09 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1255.42ms
+2024/08/29 22:20:10 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 tr_run:153] {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1429.46ms
+2024/08/29 22:20:10 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 tr_run:153] {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1613.99ms
+2024/08/29 22:20:10 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 tr_run:153] {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1807.16ms
+2024/08/29 22:20:10 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 tr_run:153] {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1988.80ms
+2024/08/29 22:20:10 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 tr_run:153] {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2150.33ms
+2024/08/29 22:20:10 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 tr_run:153] {"time": "2024-08-29 22:20:10"}
+[I 240829 22:20:10 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2317.65ms
+2024/08/29 22:20:11 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 tr_run:153] {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2489.14ms
+2024/08/29 22:20:11 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 tr_run:153] {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2667.37ms
+2024/08/29 22:20:11 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 tr_run:153] {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2833.32ms
+2024/08/29 22:20:11 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 tr_run:153] {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 3019.48ms
+2024/08/29 22:20:11 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 tr_run:153] {"time": "2024-08-29 22:20:11"}
+[I 240829 22:20:11 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 3197.85ms
+2024/08/29 22:20:12 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 tr_run:153] {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 3370.91ms
+2024/08/29 22:20:12 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 tr_run:153] {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 3538.41ms
+2024/08/29 22:20:12 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 tr_run:153] {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 3717.07ms
+2024/08/29 22:20:12 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 tr_run:153] {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 278.81ms
+2024/08/29 22:20:12 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 tr_run:153] {"time": "2024-08-29 22:20:12"}
+[I 240829 22:20:12 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 469.56ms
+2024/08/29 22:20:13 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 tr_run:153] {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 673.97ms
+2024/08/29 22:20:13 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 tr_run:153] {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 183.78ms
+2024/08/29 22:20:13 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 tr_run:153] {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 362.70ms
+2024/08/29 22:20:13 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 tr_run:153] {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 575.94ms
+2024/08/29 22:20:13 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 tr_run:153] {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 760.68ms
+2024/08/29 22:20:13 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 tr_run:153] {"time": "2024-08-29 22:20:13"}
+[I 240829 22:20:13 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 930.58ms
+2024/08/29 22:20:14 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 tr_run:153] {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1100.16ms
+2024/08/29 22:20:14 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 tr_run:153] {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1252.78ms
+2024/08/29 22:20:14 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 tr_run:153] {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1430.65ms
+2024/08/29 22:20:14 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 tr_run:153] {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1611.66ms
+2024/08/29 22:20:14 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 tr_run:153] {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1764.43ms
+2024/08/29 22:20:14 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 tr_run:153] {"time": "2024-08-29 22:20:14"}
+[I 240829 22:20:14 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1917.35ms
+2024/08/29 22:20:15 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 tr_run:153] {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2092.26ms
+2024/08/29 22:20:15 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 tr_run:153] {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2251.99ms
+2024/08/29 22:20:15 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 tr_run:153] {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2403.41ms
+2024/08/29 22:20:15 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 tr_run:153] {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2557.43ms
+2024/08/29 22:20:15 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 tr_run:153] {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2711.31ms
+2024/08/29 22:20:15 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 tr_run:153] {"time": "2024-08-29 22:20:15"}
+[I 240829 22:20:15 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2852.89ms
+2024/08/29 22:20:16 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 tr_run:153] {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 174.13ms
+2024/08/29 22:20:16 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 tr_run:153] {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 347.61ms
+2024/08/29 22:20:16 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 tr_run:153] {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 510.93ms
+2024/08/29 22:20:16 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 tr_run:153] {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 166.80ms
+2024/08/29 22:20:16 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 tr_run:153] {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 355.71ms
+2024/08/29 22:20:16 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 tr_run:153] {"time": "2024-08-29 22:20:16"}
+[I 240829 22:20:16 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 507.15ms
+2024/08/29 22:20:17 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 tr_run:153] {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 657.22ms
+2024/08/29 22:20:17 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 tr_run:153] {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 810.11ms
+2024/08/29 22:20:17 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 tr_run:153] {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 968.88ms
+2024/08/29 22:20:17 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 tr_run:153] {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1129.75ms
+2024/08/29 22:20:17 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 tr_run:153] {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1321.93ms
+2024/08/29 22:20:17 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 tr_run:153] {"time": "2024-08-29 22:20:17"}
+[I 240829 22:20:17 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1486.55ms
+2024/08/29 22:20:18 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 tr_run:153] {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1645.90ms
+2024/08/29 22:20:18 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 tr_run:153] {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1792.86ms
+2024/08/29 22:20:18 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 tr_run:153] {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1967.00ms
+2024/08/29 22:20:18 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 tr_run:153] {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2122.29ms
+2024/08/29 22:20:18 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 tr_run:153] {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2293.02ms
+2024/08/29 22:20:18 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 tr_run:153] {"time": "2024-08-29 22:20:18"}
+[I 240829 22:20:18 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2454.34ms
+2024/08/29 22:20:19 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 tr_run:153] {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2626.30ms
+2024/08/29 22:20:19 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 tr_run:153] {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2775.92ms
+2024/08/29 22:20:19 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 tr_run:153] {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 178.82ms
+2024/08/29 22:20:19 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 tr_run:153] {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 344.29ms
+2024/08/29 22:20:19 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 tr_run:153] {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 549.62ms
+2024/08/29 22:20:19 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 tr_run:153] {"time": "2024-08-29 22:20:19"}
+[I 240829 22:20:19 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 170.66ms
+2024/08/29 22:20:20 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:20"}
+[I 240829 22:20:20 tr_run:153] {"time": "2024-08-29 22:20:20"}
+[I 240829 22:20:20 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 344.93ms
+2024/08/29 22:20:20 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:20"}
+[I 240829 22:20:20 tr_run:153] {"time": "2024-08-29 22:20:20"}
+[I 240829 22:20:20 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 544.11ms
+2024/08/29 22:20:20 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:20"}
+[I 240829 22:20:20 tr_run:153] {"time": "2024-08-29 22:20:20"}
+[I 240829 22:20:20 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 765.61ms
+2024/08/29 22:20:20 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:20"}
+[I 240829 22:20:20 tr_run:153] {"time": "2024-08-29 22:20:20"}
+[I 240829 22:20:20 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 950.36ms
+2024/08/29 22:20:21 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 tr_run:153] {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1275.39ms
+2024/08/29 22:20:21 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 tr_run:153] {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1444.04ms
+2024/08/29 22:20:21 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 tr_run:153] {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1604.55ms
+2024/08/29 22:20:21 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 tr_run:153] {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1759.70ms
+2024/08/29 22:20:21 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 tr_run:153] {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1930.16ms
+2024/08/29 22:20:21 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 tr_run:153] {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2085.19ms
+2024/08/29 22:20:21 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 tr_run:153] {"time": "2024-08-29 22:20:21"}
+[I 240829 22:20:21 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2249.81ms
+2024/08/29 22:20:22 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 tr_run:153] {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2422.67ms
+2024/08/29 22:20:22 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 tr_run:153] {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2585.47ms
+2024/08/29 22:20:22 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 tr_run:153] {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2768.02ms
+2024/08/29 22:20:22 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 tr_run:153] {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2925.06ms
+2024/08/29 22:20:22 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 tr_run:153] {"time": "2024-08-29 22:20:22"}
+[I 240829 22:20:22 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 3078.83ms
+2024/08/29 22:20:23 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 tr_run:153] {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 196.41ms
+2024/08/29 22:20:23 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 tr_run:153] {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 348.64ms
+2024/08/29 22:20:23 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 tr_run:153] {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 506.98ms
+2024/08/29 22:20:23 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 tr_run:153] {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 165.55ms
+2024/08/29 22:20:23 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 tr_run:153] {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 320.48ms
+2024/08/29 22:20:23 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 tr_run:153] {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 479.61ms
+2024/08/29 22:20:23 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 tr_run:153] {"time": "2024-08-29 22:20:23"}
+[I 240829 22:20:23 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 639.69ms
+2024/08/29 22:20:24 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:24"}
+[I 240829 22:20:24 tr_run:153] {"time": "2024-08-29 22:20:24"}
+[I 240829 22:20:24 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 819.90ms
+2024/08/29 22:20:24 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:24"}
+[I 240829 22:20:24 tr_run:153] {"time": "2024-08-29 22:20:24"}
+[I 240829 22:20:24 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1141.13ms
+2024/08/29 22:20:24 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:24"}
+[I 240829 22:20:24 tr_run:153] {"time": "2024-08-29 22:20:24"}
+[I 240829 22:20:24 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1342.69ms
+2024/08/29 22:20:24 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:24"}
+[I 240829 22:20:24 tr_run:153] {"time": "2024-08-29 22:20:24"}
+[I 240829 22:20:24 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1559.70ms
+2024/08/29 22:20:25 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 tr_run:153] {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1723.92ms
+2024/08/29 22:20:25 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 tr_run:153] {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 1927.28ms
+2024/08/29 22:20:25 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 tr_run:153] {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2131.68ms
+2024/08/29 22:20:25 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 tr_run:153] {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2324.76ms
+2024/08/29 22:20:25 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 tr_run:153] {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2491.85ms
+2024/08/29 22:20:25 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 tr_run:153] {"time": "2024-08-29 22:20:25"}
+[I 240829 22:20:25 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2650.23ms
+2024/08/29 22:20:26 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:26"}
+[I 240829 22:20:26 tr_run:153] {"time": "2024-08-29 22:20:26"}
+[I 240829 22:20:26 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 2838.29ms
+2024/08/29 22:20:26 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:26"}
+[I 240829 22:20:26 tr_run:153] {"time": "2024-08-29 22:20:26"}
+[I 240829 22:20:26 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 3008.61ms
+2024/08/29 22:20:26 - TrWebOCRLog.backend.webInterface.tr_run - [INFO] | {"time": "2024-08-29 22:20:26"}
+[I 240829 22:20:26 tr_run:153] {"time": "2024-08-29 22:20:26"}
+[I 240829 22:20:26 web:2348] 200 POST /api/tr-run/ (127.0.0.1) 3179.36ms

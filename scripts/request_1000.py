@@ -13,7 +13,7 @@ async def send_request(session, url, data, semaphore):
 async def main():
     url = "http://localhost:8008/api/trocr"
     data = {
-        "img_path": "/mnt/d/Code_Space/HPC/TrWebOCR/img.png"
+        "img_path": "/mnt/d/Code_Space/HPC/img.png"
     }
 
     semaphore = asyncio.Semaphore(20)  # 信号量设置为 20，控制并发数量
