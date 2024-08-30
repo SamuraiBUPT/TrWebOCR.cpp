@@ -24,7 +24,36 @@ As the release files from [Tr](https://github.com/myhub/tr) has only `.so` files
 + The `tr_run` function can be executed in multi-threads environment, which is of vital importance to accelerate the inference latency and throughput.
 + The input of `tr_run` function can be a path of local image, or the pointer of ndarray, for easy-development reasons I adopt `local image path` (const char*) as input. Another kind of input will try later.
 
+# Quick start
 
+git clone & fetch submodules:
+
+```bash
+git clone https://github.com/SamuraiBUPT/TrWebOCR.cpp.git
+cd TrWebOCR.cpp
+git submodule update --init --recursive
+```
+
+And then build the project:
+
+```bash
+mkdir build && cd build
+
+# without GPU
+cmake -DUSE_GPU=OFF ..
+
+# with GPU
+cmake -DUSE_GPU=ON ..
+
+# compile
+make
+```
+
+and if there is no error, you can run the server:
+
+```bash
+./main
+```
 
 ## TODO
 + [x] support inference
