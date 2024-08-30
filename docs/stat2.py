@@ -43,6 +43,6 @@ plt.bar(labels, mean_values, color=['blue', 'green'])
 
 # 添加标题和标签
 plt.title('Throughtput Comparison')
-plt.ylabel('Throughtput (req/ms)')
+plt.ylabel('Throughtput (req/s)')
 
 plt.savefig('Throughput.png')
