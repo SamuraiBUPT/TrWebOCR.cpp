@@ -1,4 +1,4 @@
-# FastTrWeb
+# TrWebOCR.cpp
 
 High throughput & inference engine for [Tr](https://github.com/myhub/tr) with cplusplus extensions, updated for environments like ubuntu 20.04+.
 
