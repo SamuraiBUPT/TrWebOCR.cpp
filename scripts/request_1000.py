@@ -13,7 +13,7 @@ async def send_request(session, url, data, semaphore):
 async def main():
     url = "http://localhost:8008/api/trocr"
     data = {
-        "img_path": "/mnt/d/Code_Space/HPC/img.png"
+        "img_path": "/mnt/d/Code_Space/HPC/FastTrWeb/img.png"
     }
 
     semaphore = asyncio.Semaphore(20)  # 信号量设置为 20，控制并发数量
@@ -21,7 +21,7 @@ async def main():
 
     # 创建一个 session
     async with aiohttp.ClientSession() as session:
-        for i in range(100):  # 发送 1000 个请求
+        for i in range(50):  # 发送 1000 个请求
             task = asyncio.create_task(send_request(session, url, data, semaphore))
             tasks.append(task)
 

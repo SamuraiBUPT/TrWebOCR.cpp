@@ -175,7 +175,7 @@ int main() {
                 std::vector<TrResult> results = future.get();   // inference
                 auto end = std::chrono::high_resolution_clock::now();
                 auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-                std::cout << "耗时：" << duration.count() / 1000.0 << "微秒" << std::endl;
+                std::cout << "time: " << duration.count() / 1000.0 << " ms" << std::endl;
                 
                 std::string result_str;
                 for (const auto& result : results) {

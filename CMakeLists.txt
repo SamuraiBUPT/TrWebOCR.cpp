@@ -47,3 +47,5 @@ else()
     target_link_libraries(main ${CMAKE_SOURCE_DIR}/tr/tr/libtr.so)
     target_link_libraries(main ${CMAKE_SOURCE_DIR}/tr/tr/libonnxruntime.so.1.3.0)
 endif()
+
+target_link_libraries(main pthread)
