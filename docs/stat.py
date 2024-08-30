@@ -18,7 +18,7 @@ times = [float(time) for time in times]  # 转换为浮点数
 with open('log_cpp_0829.txt', 'r', encoding='utf-8') as file:
     content = file.read()
 
-pattern = r'耗时：(\d+\.\d+)微秒'
+pattern = r'time: (\d+\.\d+) ms'
 
 times2 = re.findall(pattern, content)
 
@@ -42,4 +42,4 @@ plt.legend()
 
 plt.yticks([])
 
-plt.savefig('time_comparison.png')
+plt.savefig('time_comparison2.png')

@@ -62,6 +62,76 @@ and if there is no error, you can run the server:
 
 # Benchmark
 
-Inference 100 requests, the concurrency is 20, CPU mode:
+### Inference Latency
+__CPU Mode__
+
++ Num=100 requests
++ Concurrency=20
 
 ![benchmark1](docs/time_comparison.png)
+
+__GPU Mode__
+
++ Num=100 requests
++ Concurrency=20
+
+![benchmark2](docs/time_comparison-gpu.png)
+
+The Cplusplus backend seems to offer more stable service than tornado backend.
+
+### GPU Utilization
+
+And the GPU utilization comparison:
+
+> GPU: Cplusplus backend
+```
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.90.07              Driver Version: 550.90.07      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 2080 Ti     On  |   00000000:B2:00.0 Off |                  N/A |
+| 33%   45C    P2            135W /  250W |    2673MiB /  11264MiB |     73%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
++-----------------------------------------------------------------------------------------+
+```
+
+GPU: Tornado backend
+
+```
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.90.07              Driver Version: 550.90.07      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 2080 Ti     On  |   00000000:B2:00.0 Off |                  N/A |
+| 33%   45C    P2            135W /  250W |     875MiB /  11264MiB |    39%       Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
++-----------------------------------------------------------------------------------------+
+```
+
+I think there has something to do with the GPU utilization in Tornado backend, and that can be one of the reasons why the C++ backend is faster.
+
+### Throughput
+
+Test on 10000 requests, concurrency=20, same images dataset, GPU mode.
+
+![benchmark3](docs/Throughput.png)

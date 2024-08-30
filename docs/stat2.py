@@ -18,7 +18,7 @@ times = [float(time) for time in times]  # 转换为浮点数
 with open('log_cpp_0829.txt', 'r', encoding='utf-8') as file:
     content = file.read()
 
-pattern = r'耗时：(\d+\.\d+)微秒'
+pattern = r'time: (\d+\.\d+) ms'
 
 times2 = re.findall(pattern, content)
 
@@ -29,15 +29,20 @@ times2 = [float(time) for time in times2]  # 转换为浮点数
 mean_time1 = sum(times) / len(times)
 mean_time2 = sum(times2) / len(times2)
 
+mean_time1 = 423.56596398353577
+mean_time2 = 242.52849769592285
+
 # 绘制柱状图
-labels = ['TrWebOCR Time (ms)', 'C++ Time (μs)']
-mean_values = [mean_time1, mean_time2]
+throughput1 = 10000 / mean_time1
+throughput2 = 10000 / mean_time2
+labels = ['Tornado', 'C++']
+mean_values = [throughput1, throughput2]
 
 plt.figure(figsize=(8, 6))
 plt.bar(labels, mean_values, color=['blue', 'green'])
 
 # 添加标题和标签
-plt.title('Average Time Comparison')
-plt.ylabel('Average Time')
+plt.title('Throughtput Comparison')
+plt.ylabel('Throughtput (req/ms)')
 
-plt.savefig('average_time_comparison.png')
+plt.savefig('Throughput.png')
