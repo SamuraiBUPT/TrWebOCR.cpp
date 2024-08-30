@@ -57,7 +57,8 @@ and if there is no error, you can run the server:
 
 ## TODO
 + [x] support inference
-+ [ ] GPU support
++ [x] GPU support
++ [ ] Flexible image serving (**In progress**)
 + [ ] Image rotation C++ implement.
 
 # Benchmark
