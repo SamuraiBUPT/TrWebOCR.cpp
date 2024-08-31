@@ -11,7 +11,7 @@ int tr_run_image_from_local(const char* image_path,
                             float* rect, int* unicode, float* prob);
 
 // Tr OCR for a ndarray image, the first param is the ndarray pointer. Not implemented yet.
-int tr_run_image_from_ndarray(void* array, 
+int tr_run_image_from_ndarray(unsigned char* array, 
                              int ctpn_id, int crnn_id,
                              int height, int width,
                              int CV_TYPE,

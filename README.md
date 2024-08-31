@@ -6,10 +6,11 @@ The web service depends on:
 
 + [httplib](https://github.com/yhirose/cpp-httplib)
 + [nlohmann/json](https://github.com/nlohmann/json)
++ [stb](https://github.com/nothings/stb)
 
-The two repository adopt `one header file only` way, which is really convenient for web service developing.
+These three repository adopt `one header file only` way, which is convenient for web service developing.
 
-Let's just keep it simple, and fast.
+**Let's just keep it simple, and fast.**
 
 
 
@@ -55,10 +56,18 @@ and if there is no error, you can run the server:
 ./main
 ```
 
+as for requests, you may use python:
+
+```bash
+cd scripts
+python test_api.py
+```
+
 ## TODO
 + [x] support inference
 + [x] GPU support
-+ [ ] Flexible image serving (**In progress**)
++ [x] Flexible image serving (**In progress**)
++ [ ] Support Chinese OCR.
 + [ ] Image rotation C++ implement.
 
 # Benchmark

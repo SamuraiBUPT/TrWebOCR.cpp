@@ -26,6 +26,8 @@ include_directories(${CMAKE_SOURCE_DIR}/3rd_party)
 set(CTPN_PATH \"${CMAKE_SOURCE_DIR}/tr/tr/ctpn.bin\")
 set(CRNN_PATH \"${CMAKE_SOURCE_DIR}/tr/tr/crnn.bin\")
 
+add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
+
 # Add the executable target (main.cc)
 add_executable(main 
                csrc/tr.h
@@ -34,6 +36,12 @@ add_executable(main
                csrc/tr_wrapper.cc
                csrc/tr_worker.h
                csrc/tr_worker.cc
+
+               3rd_party/base64.cpp
+               3rd_party/base64.h
+               3rd_party/json.hpp
+               3rd_party/json.hpp
+               3rd_party/stb_image.h
                )
 
 target_compile_definitions(main PRIVATE CTPN_PATH=${CTPN_PATH})

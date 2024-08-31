@@ -5,8 +5,12 @@
 
 #include "tr_wrapper.h"
 #include "tr_worker.h"
+
+// third party libraries
 #include "httplib.h"
 #include "json.hpp"
+#include "stb_image.h"
+#include "base64.h"
 
 using json = nlohmann::json;
 using namespace httplib;
@@ -163,32 +167,67 @@ int main() {
 
     svr.Post("/api/trocr", [&tr_task_pool, ctpn_id, crnn_id](const Request& req, Response& res) {
         try {
-            // 解析请求体中的 JSON 数据
-            auto json_data = json::parse(req.body);
+            int width, height, channels;
+            unsigned char* image_data = nullptr;
 
-            if (json_data.contains("img_path")) {
-                auto img_path = json_data["img_path"].get<std::string>();
+            if (req.has_file("file")) {
+                const auto& file = req.get_file_value("file");
+                // 从文件内容中加载图像
+                // 注意我们在加载的时候会被load为灰度图像
+                image_data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(file.content.data()), file.content.size(), &width, &height, &channels, STBI_grey);
+            } else if (req.has_param("img_base64")) {
+                std::string img_base64 = req.get_param_value("img_base64");
+                std::string decoded_data = base64_decode(img_base64);  // 解码Base64数据
 
-                auto start = std::chrono::high_resolution_clock::now();
-                auto future = tr_task_pool.enqueue(img_path.c_str(), ctpn_id, crnn_id);
-
-                std::vector<TrResult> results = future.get();   // inference
-                auto end = std::chrono::high_resolution_clock::now();
-                auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-                std::cout << "time: " << duration.count() / 1000.0 << " ms" << std::endl;
-                
-                std::string result_str;
-                for (const auto& result : results) {
-                    std::vector<float> rect = std::get<0>(result);
-                    std::string txt = std::get<1>(result);
-                    float confidence = std::get<2>(result);
-                    result_str += txt + "\n";
-                }
-                
-                res.set_content(result_str, "text/plain");
+                // 从解码后的数据中加载图像
+                image_data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(decoded_data.data()), decoded_data.size(), &width, &height, &channels, STBI_grey);
             } else {
-                res.set_content("Missing img_path parameter", "text/plain");
+                res.set_content("Missing file or img_base64 parameter", "text/plain");
+                return;
             }
+
+            if (!image_data) {
+                res.set_content("Failed to load image", "text/plain");
+                return;
+            }
+
+            // printf("channels: %d\n", channels);
+            if (channels == 3 || channels == 4) {
+                unsigned char* gray_data = new unsigned char[width * height];
+                for (int i = 0; i < width * height; ++i) {
+                    int r = image_data[i * channels];
+                    int g = image_data[i * channels + 1];
+                    int b = image_data[i * channels + 2];
+                    gray_data[i] = static_cast<unsigned char>(0.299 * r + 0.587 * g + 0.114 * b);
+                }
+                stbi_image_free(image_data);  // 释放原始图像数据
+                image_data = gray_data;  // 更新指针为灰度图像数据
+                channels = 1;  // 更新通道数为1
+            }
+
+            // 现在开始处理图像数据
+            // 调用任务池中的任务接口（假设任务接口能够处理 image_data 指针）
+            auto start = std::chrono::high_resolution_clock::now();
+            auto future = tr_task_pool.enqueue(image_data, width, height, channels, ctpn_id, crnn_id);
+            std::vector<TrResult> results = future.get();   // inference
+            auto end = std::chrono::high_resolution_clock::now();
+
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            std::cout << "time: " << duration.count() / 1000.0 << " ms" << std::endl;
+
+            // 处理结果并返回响应
+            std::string result_str;
+            for (const auto& result : results) {
+                std::vector<float> rect = std::get<0>(result);
+                std::string txt = std::get<1>(result);
+                float confidence = std::get<2>(result);
+                result_str += txt + "\n";
+            }
+            res.set_content(result_str, "text/plain");
+
+            // 释放图像数据
+            stbi_image_free(image_data);
+
         } catch (const std::exception& e) {
             res.set_content("Invalid JSON data", "text/plain");
         }

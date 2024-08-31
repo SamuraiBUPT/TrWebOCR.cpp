@@ -59,7 +59,7 @@ void TrThreadPool::start(size_t numThreads) {
 
             while (true) {
                 TrTask task;
-                std::shared_ptr<std::promise<std::vector<TrResult>>> promise;
+                PromiseResult promise;
 
                 {
                     std::unique_lock<std::mutex> lock(eventMutex);
@@ -110,13 +110,38 @@ void TrThreadPool::stop() {
 std::future<std::vector<TrResult>> TrThreadPool::enqueue(const char* image_path, int ctpn_id, int crnn_id) {
     auto promise = std::make_shared<std::promise<std::vector<TrResult>>>();
     auto future = promise->get_future();
- 
+
     {
         std::unique_lock<std::mutex> lock(eventMutex);
         task_queue.emplace([=](float* rect, int* unicode, float* prob) -> std::vector<TrResult>{
             int line_num = tr_run_image_from_local(image_path, ctpn_id, crnn_id, rect, unicode, prob);
             std::vector<TrResult> results = process_results(line_num, rect, unicode, prob);
             // promise->set_value(results);  // 将结果设置给 promise
+            return results;
+        }, promise);
+    }
+    eventVar.notify_one();
+    return future;
+}
+
+std::future<std::vector<TrResult>> TrThreadPool::enqueue(unsigned char* image_data, int height, int width, int channels, int ctpn_id, int crnn_id) {
+    auto promise = std::make_shared<std::promise<std::vector<TrResult>>>();
+    auto future = promise->get_future();
+
+    {
+        std::unique_lock<std::mutex> lock(eventMutex);
+        task_queue.emplace([=](float* rect, int* unicode, float* prob) -> std::vector<TrResult>{
+            int CV_TYPE = channels == 1 ? 0 : 16;    // TODO: modify here
+            printf("CTYPE is: %d\n", CV_TYPE);
+            int rotate_flag = 2;
+            int line_num = tr_run_image_from_ndarray(image_data, ctpn_id, crnn_id, 
+                                                        height, width, CV_TYPE, 
+                                                        rotate_flag, 
+                                                        rect, 512,
+                                                        unicode, prob, 512);  
+            std::vector<TrResult> results = process_results(line_num, rect, unicode, prob);
+
+            std::cout << "line_num: " << line_num << std::endl;
             return results;
         }, promise);
     }

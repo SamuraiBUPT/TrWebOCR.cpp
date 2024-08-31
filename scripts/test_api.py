@@ -1,16 +1,16 @@
 import requests
-import time
 
-data = {
-    "img_path": "/mnt/d/Code_Space/HPC/TrWebOCR/img.png"
-}
+# 服务器的URL
+url = "http://localhost:8008/api/trocr"  # 根据实际情况替换URL
 
-start = time.time()
-# 发送 GET 请求到 http://localhost:8008/hi
-response = requests.post("http://localhost:8008/api/trocr", json=data)
-end = time.time()
-print("Time taken:", end-start)
+# 需要上传的图像文件路径
+file_path = "./img.png"  # 替换为你的图像文件路径
 
-# 输出服务器的响应
-print("Status Code:", response.status_code)
-print("Response Body:", response.text)
+# 打开文件并发送请求
+with open(file_path, 'rb') as f:
+    files = {'file': f}
+    response = requests.post(url, files=files)
+
+# 打印服务器响应
+print(f"Status code: {response.status_code}")
+print(f"Response body: {response.text}")
