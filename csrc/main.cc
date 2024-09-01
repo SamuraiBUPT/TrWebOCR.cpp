@@ -174,13 +174,13 @@ int main() {
                 const auto& file = req.get_file_value("file");
                 // 从文件内容中加载图像
                 // 注意我们在加载的时候会被load为灰度图像
-                image_data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(file.content.data()), file.content.size(), &width, &height, &channels, STBI_grey);
+                image_data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(file.content.data()), file.content.size(), &width, &height, &channels, 0);
             } else if (req.has_param("img_base64")) {
                 std::string img_base64 = req.get_param_value("img_base64");
                 std::string decoded_data = base64_decode(img_base64);  // 解码Base64数据
 
                 // 从解码后的数据中加载图像
-                image_data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(decoded_data.data()), decoded_data.size(), &width, &height, &channels, STBI_grey);
+                image_data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(decoded_data.data()), decoded_data.size(), &width, &height, &channels, 0);
             } else {
                 res.set_content("Missing file or img_base64 parameter", "text/plain");
                 return;
@@ -191,8 +191,23 @@ int main() {
                 return;
             }
 
-            // printf("channels: %d\n", channels);
-            if (channels == 3 || channels == 4) {
+            // // 创建或打开一个txt文件
+            // std::ofstream out_file("origin_gray_image_cpp.txt");
+
+            // if (out_file.is_open()) {
+            //     // 将灰度图像数据写入文件
+            //     for (int i = 0; i < width * height; ++i) {
+            //         out_file << static_cast<int>(image_data[i]) << " "; // 写入每个像素的灰度值
+            //         if ((i + 1) % width == 0) {
+            //             out_file << "\n";  // 每行写满一个图像宽度后换行
+            //         }
+            //     }
+            //     out_file.close(); // 关闭文件
+            // } else {
+            //     std::cerr << "无法打开文件" << std::endl;
+            // }
+
+            if (channels == 3) {
                 unsigned char* gray_data = new unsigned char[width * height];
                 for (int i = 0; i < width * height; ++i) {
                     int r = image_data[i * channels];
@@ -203,6 +218,41 @@ int main() {
                 stbi_image_free(image_data);  // 释放原始图像数据
                 image_data = gray_data;  // 更新指针为灰度图像数据
                 channels = 1;  // 更新通道数为1
+            } else if (channels == 4) {
+                unsigned char* gray_data = new unsigned char[width * height];
+                for (int i = 0; i < width * height; ++i) {
+                    int r = image_data[i * channels];
+                    int g = image_data[i * channels + 1];
+                    int b = image_data[i * channels + 2];
+                    int a = image_data[i * channels + 3];
+
+                    // 使用预乘Alpha的方式计算灰度值
+                    r = r * a / 255;
+                    g = g * a / 255;
+                    b = b * a / 255;
+
+                    gray_data[i] = static_cast<unsigned char>(0.299 * r + 0.587 * g + 0.114 * b);
+                }
+                stbi_image_free(image_data);  // 释放原始图像数据
+                image_data = gray_data;  // 更新指针为灰度图像数据
+                channels = 1;  // 更新通道数为1
+            }
+
+            // 把image_data数组的数据写入txt
+            // 创建或打开一个txt文件
+            std::ofstream out_file2("gray_image_cpp.txt");
+
+            if (out_file2.is_open()) {
+                // 将灰度图像数据写入文件
+                for (int i = 0; i < width * height; ++i) {
+                    out_file2 << static_cast<int>(image_data[i]) << " "; // 写入每个像素的灰度值
+                    if ((i + 1) % width == 0) {
+                        out_file2 << "\n";  // 每行写满一个图像宽度后换行
+                    }
+                }
+                out_file2.close(); // 关闭文件
+            } else {
+                std::cerr << "无法打开文件" << std::endl;
             }
 
             // 现在开始处理图像数据
@@ -220,6 +270,7 @@ int main() {
             for (const auto& result : results) {
                 std::vector<float> rect = std::get<0>(result);
                 std::string txt = std::get<1>(result);
+                // std::cout << txt << std::endl;
                 float confidence = std::get<2>(result);
                 result_str += txt + "\n";
             }
