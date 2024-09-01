@@ -86,6 +86,8 @@ python test_api.py
 + [x] Flexible image serving (**In progress**)
 + [ ] Support Chinese OCR.
 + [ ] Image rotation C++ implement.
++ [ ] Support ARM platform.
++ [ ] Build dockerfile.
 
 
 
