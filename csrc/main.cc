@@ -2,14 +2,18 @@
 #include <fstream>
 #include <iostream>
 #include <chrono>
+#include <vector>
+
+// use opencv
+#include <opencv2/opencv.hpp>
 
 #include "tr_wrapper.h"
 #include "tr_worker.h"
+#include "tr_utils.h"
 
 // third party libraries
 #include "httplib.h"
 #include "json.hpp"
-#include "stb_image.h"
 #include "base64.h"
 
 using json = nlohmann::json;
@@ -28,13 +32,6 @@ void test_inference() {
     auto allocate_end = std::chrono::high_resolution_clock::now();
 
     const char* img_path = "../img.png";
-
-    // int line_num = tr_run(0, 1, 
-    //     img, h, w, CV_TYPE, 
-    //     flag, 
-    //     rect, max_lines,
-    //     unicode, prob, max_width);
-
     auto start = std::chrono::high_resolution_clock::now();
 
     int line_num = tr_run_image_from_local(img_path, 0, 1, rect, unicode, prob);
@@ -168,97 +165,45 @@ int main() {
     svr.Post("/api/trocr", [&tr_task_pool, ctpn_id, crnn_id](const Request& req, Response& res) {
         try {
             int width, height, channels;
-            unsigned char* image_data = nullptr;
+            cv::Mat img;
 
             if (req.has_file("file")) {
                 const auto& file = req.get_file_value("file");
-                // 从文件内容中加载图像
-                // 注意我们在加载的时候会被load为灰度图像
-                image_data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(file.content.data()), file.content.size(), &width, &height, &channels, 0);
+                // 从内存中读取图像
+                std::vector<unsigned char> img_data(file.content.begin(), file.content.end());
+                img = cv::imdecode(img_data, cv::IMREAD_COLOR);  // 读取为彩色图像
             } else if (req.has_param("img_base64")) {
                 std::string img_base64 = req.get_param_value("img_base64");
                 std::string decoded_data = base64_decode(img_base64);  // 解码Base64数据
 
-                // 从解码后的数据中加载图像
-                image_data = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(decoded_data.data()), decoded_data.size(), &width, &height, &channels, 0);
+                // 将Base64解码的数据转为vector并加载为彩色图像
+                std::vector<unsigned char> img_data(decoded_data.begin(), decoded_data.end());
+                img = cv::imdecode(img_data, cv::IMREAD_COLOR);  // 读取为彩色图像
             } else {
                 res.set_content("Missing file or img_base64 parameter", "text/plain");
                 return;
             }
 
-            if (!image_data) {
+            if (img.empty()) {
                 res.set_content("Failed to load image", "text/plain");
                 return;
             }
 
-            // // 创建或打开一个txt文件
-            // std::ofstream out_file("origin_gray_image_cpp.txt");
+            // 转为灰度图像
+            cv::Mat gray_img;
+            cv::cvtColor(img, gray_img, cv::COLOR_BGR2GRAY);
 
-            // if (out_file.is_open()) {
-            //     // 将灰度图像数据写入文件
-            //     for (int i = 0; i < width * height; ++i) {
-            //         out_file << static_cast<int>(image_data[i]) << " "; // 写入每个像素的灰度值
-            //         if ((i + 1) % width == 0) {
-            //             out_file << "\n";  // 每行写满一个图像宽度后换行
-            //         }
-            //     }
-            //     out_file.close(); // 关闭文件
-            // } else {
-            //     std::cerr << "无法打开文件" << std::endl;
-            // }
+            width = gray_img.cols;
+            height = gray_img.rows;
+            channels = gray_img.channels();
 
-            if (channels == 3) {
-                unsigned char* gray_data = new unsigned char[width * height];
-                for (int i = 0; i < width * height; ++i) {
-                    int r = image_data[i * channels];
-                    int g = image_data[i * channels + 1];
-                    int b = image_data[i * channels + 2];
-                    gray_data[i] = static_cast<unsigned char>(0.299 * r + 0.587 * g + 0.114 * b);
-                }
-                stbi_image_free(image_data);  // 释放原始图像数据
-                image_data = gray_data;  // 更新指针为灰度图像数据
-                channels = 1;  // 更新通道数为1
-            } else if (channels == 4) {
-                unsigned char* gray_data = new unsigned char[width * height];
-                for (int i = 0; i < width * height; ++i) {
-                    int r = image_data[i * channels];
-                    int g = image_data[i * channels + 1];
-                    int b = image_data[i * channels + 2];
-                    int a = image_data[i * channels + 3];
+            unsigned char* image_data = gray_img.data;  // 获取图像数据指针
 
-                    // 使用预乘Alpha的方式计算灰度值
-                    r = r * a / 255;
-                    g = g * a / 255;
-                    b = b * a / 255;
-
-                    gray_data[i] = static_cast<unsigned char>(0.299 * r + 0.587 * g + 0.114 * b);
-                }
-                stbi_image_free(image_data);  // 释放原始图像数据
-                image_data = gray_data;  // 更新指针为灰度图像数据
-                channels = 1;  // 更新通道数为1
-            }
-
-            // 把image_data数组的数据写入txt
-            // 创建或打开一个txt文件
-            std::ofstream out_file2("gray_image_cpp.txt");
-
-            if (out_file2.is_open()) {
-                // 将灰度图像数据写入文件
-                for (int i = 0; i < width * height; ++i) {
-                    out_file2 << static_cast<int>(image_data[i]) << " "; // 写入每个像素的灰度值
-                    if ((i + 1) % width == 0) {
-                        out_file2 << "\n";  // 每行写满一个图像宽度后换行
-                    }
-                }
-                out_file2.close(); // 关闭文件
-            } else {
-                std::cerr << "无法打开文件" << std::endl;
-            }
 
             // 现在开始处理图像数据
             // 调用任务池中的任务接口（假设任务接口能够处理 image_data 指针）
             auto start = std::chrono::high_resolution_clock::now();
-            auto future = tr_task_pool.enqueue(image_data, width, height, channels, ctpn_id, crnn_id);
+            auto future = tr_task_pool.enqueue(image_data, height, width, channels, ctpn_id, crnn_id);
             std::vector<TrResult> results = future.get();   // inference
             auto end = std::chrono::high_resolution_clock::now();
 
@@ -275,9 +220,6 @@ int main() {
                 result_str += txt + "\n";
             }
             res.set_content(result_str, "text/plain");
-
-            // 释放图像数据
-            stbi_image_free(image_data);
 
         } catch (const std::exception& e) {
             res.set_content("Invalid JSON data", "text/plain");

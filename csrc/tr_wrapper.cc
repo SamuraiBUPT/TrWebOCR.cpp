@@ -1,4 +1,5 @@
 #include "tr_wrapper.h"
+#include "tr_utils.h"
 
 int tr_run_image_from_local(const char* image_path, 
                             int ctpn_id, int crnn_id,
@@ -19,6 +20,7 @@ int tr_run_image_from_ndarray(unsigned char* array,
                              int rotate_flag,
                              float* rect, int max_lines,
                              int* unicode, float* prob, int max_width){
+    // save_matrix(array, height, width, std::string("attn_cpp.txt"));
     int line_nums = tr_run(ctpn_id, crnn_id, 
                           array, height, width, CV_TYPE,
                           rotate_flag, 

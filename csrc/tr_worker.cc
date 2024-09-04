@@ -132,7 +132,7 @@ std::future<std::vector<TrResult>> TrThreadPool::enqueue(unsigned char* image_da
         std::unique_lock<std::mutex> lock(eventMutex);
         task_queue.emplace([=](float* rect, int* unicode, float* prob) -> std::vector<TrResult>{
             int CV_TYPE = channels == 1 ? 0 : 16;    // TODO: modify here
-            printf("CTYPE is: %d\n", CV_TYPE);
+            // printf("CTYPE is: %d\n", CV_TYPE);
             int rotate_flag = 2;
             int line_num = tr_run_image_from_ndarray(image_data, ctpn_id, crnn_id, 
                                                         height, width, CV_TYPE, 
@@ -141,7 +141,7 @@ std::future<std::vector<TrResult>> TrThreadPool::enqueue(unsigned char* image_da
                                                         unicode, prob, 512);  
             std::vector<TrResult> results = process_results(line_num, rect, unicode, prob);
 
-            std::cout << "line_num: " << line_num << std::endl;
+            // std::cout << "line_num: " << line_num << std::endl;
             return results;
         }, promise);
     }

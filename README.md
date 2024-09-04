@@ -10,10 +10,10 @@
 
 + [httplib](https://github.com/yhirose/cpp-httplib)：C++网络库，对于开发Pythonic backend的人比较友好，因为设计理念相近，基本上开箱即用。
 + [nlohmann/json](https://github.com/nlohmann/json)：json库，处理json数据的，非常方便。
-+ [stb](https://github.com/nothings/stb)：`stb_image`库，主要用来读取图像文件。一方面是我们主要的运算bottleneck在底层的`tr_run`上，所以前面能够尽量减轻负担就尽量减轻，另一方面是我们对于图像的需求仅仅是读取、转化灰度即可，完全没有必要使用opencv（对于需求来说过重了）多方面考虑最后决定使用这个轻量级图像处理库。
 
 这三个C++库的设计都遵循`one header file only`，也就是仅仅只有一份头文件，只需要include就可以使用，极大地降低了环境配置与编译带来的心智负担。这三份代码我已经存放在`3rd_party`中，CMake也已经配置好，无需使用者自行拉取、链接、编译。
 
++ [opencv](https://github.com/opencv/opencv)：主要用来读取图像文件，尝试了不同的轻量级读取图片库例如`stb_image`等，发现在读取图片的结果上与pillow、opencv的读取结果又出入。因为底层的`tr_run`处于黑盒状态，不知道它期待接收的图片数据是什么，所以采用了与原仓库中同样的读取手段。其实对于opencv库，我们用到的仅仅只有读取功能、转化灰度功能。
 
 
 **TrWebOCR.cpp的宗旨是：让我们的OCR service尽量快捷、轻盈、高效。**
@@ -22,7 +22,7 @@
 
 # 特性
 
-考虑到 [Tr ](https://github.com/myhub/tr) 这个OCR库仅仅只提供了`.so`文件，没有任何人能够知道它底层是怎么实现的，所以有关这个接口的使用，只能借鉴`TrWebOCR`中的调用方案管中窥豹，推测`tr_run`等函数接口的参数类型是什么，并且基于Tr库里面提供的一些例子，我们大致可以推测：
+考虑到 [Tr](https://github.com/myhub/tr) 这个OCR库仅仅只提供了`.so`文件，没有任何人能够知道它底层是怎么实现的，所以有关这个接口的使用，只能借鉴`TrWebOCR`中的调用方案管中窥豹，推测`tr_run`等函数接口的参数类型是什么，并且基于Tr库里面提供的一些例子，我们大致可以推测：
 
 + `tr_run`这个函数是可以多线程运行的，并且底层的计算资源不会打架、不会发生竞争读取等异步错误，上层可以轻松将其多线程运行，这对于降低请求延迟、提高系统吞吐量是至关重要的。
 + 在最新的Tr 2.6、2.8中，`tr_run`函数的输入可以是一张本地图片的绝对路径，也可以是`uint8_t*`类型的数组。
@@ -39,6 +39,8 @@
 
 # 快速上手
 
+## Step 1: git clone
+
 首先把仓库clone下来，并且拉取git submodules (也就是Tr)：
 
 ```bash
@@ -47,8 +49,27 @@ cd TrWebOCR.cpp
 git submodule update --init --recursive
 ```
 
+## Step 2: 安装opencv （如果已经安装了dev包，可以跳过这一步）
+通过这个指令一键安装opencv4：
+```bash
+sudo apt install libopencv-dev
+```
 
+通过如下指令验证是否安装成功：
 
+```bash
+pkg-config --modversion opencv4
+```
+
+如果看见输出：
+
+```
+4.2.0
+```
+
+就意味着安装成功了。
+
+## Step 3: 编译
 然后开始编译代码：
 
 ```bash
@@ -83,7 +104,7 @@ python test_api.py
 
 + [x] support inference
 + [x] GPU support
-+ [x] Flexible image serving (**In progress**)
++ [x] Flexible image serving
 + [ ] Support Chinese OCR.
 + [ ] Image rotation C++ implement.
 + [ ] Support ARM platform.
