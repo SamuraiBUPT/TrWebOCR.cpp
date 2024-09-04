@@ -105,7 +105,7 @@ python test_api.py
 + [x] support inference
 + [x] GPU support
 + [x] Flexible image serving
-+ [ ] Support Chinese OCR.
++ [x] Support Chinese OCR.
 + [ ] CUDA memory management.
 + [ ] Support ARM platform.
 + [ ] Build dockerfile.

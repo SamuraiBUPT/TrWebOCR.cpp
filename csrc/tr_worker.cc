@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>  // 用于格式化输出
 
 #include "tr_worker.h"
 #include "tr_wrapper.h"
@@ -6,6 +7,26 @@
 // 将 Unicode 码点转换为字符
 inline char unichr(int unicode) {
     return static_cast<char>(unicode); // 对于宽字符，使用 wchar_t 和 wstring
+}
+
+std::string unichr_utf8(int unicode) {
+    std::string result;
+    if (unicode <= 0x7F) {
+        result += static_cast<char>(unicode);
+    } else if (unicode <= 0x7FF) {
+        result += static_cast<char>(0xC0 | ((unicode >> 6) & 0x1F));
+        result += static_cast<char>(0x80 | (unicode & 0x3F));
+    } else if (unicode <= 0xFFFF) {
+        result += static_cast<char>(0xE0 | ((unicode >> 12) & 0x0F));
+        result += static_cast<char>(0x80 | ((unicode >> 6) & 0x3F));
+        result += static_cast<char>(0x80 | (unicode & 0x3F));
+    } else if (unicode <= 0x10FFFF) {
+        result += static_cast<char>(0xF0 | ((unicode >> 18) & 0x07));
+        result += static_cast<char>(0x80 | ((unicode >> 12) & 0x3F));
+        result += static_cast<char>(0x80 | ((unicode >> 6) & 0x3F));
+        result += static_cast<char>(0x80 | (unicode & 0x3F));
+    }
+    return result;
 }
 
 std::pair<std::string, float> parse(const int* unicode_arr, const float* prob_arr, int num) {
@@ -18,7 +39,7 @@ std::pair<std::string, float> parse(const int* unicode_arr, const float* prob_ar
         int unicode = unicode_arr[pos];
         if (unicode >= 0) {
             if (unicode != unicode_pre) {
-                txt += unichr(unicode);  // 将 Unicode 转换为字符并追加到字符串
+                txt += unichr_utf8(unicode);  // 将 Unicode 转换为 UTF-8 编码
             }
             count += 1;
             prob += prob_arr[pos];

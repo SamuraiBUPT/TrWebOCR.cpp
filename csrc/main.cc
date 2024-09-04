@@ -219,7 +219,7 @@ int main() {
                 float confidence = std::get<2>(result);
                 result_str += txt + "\n";
             }
-            res.set_content(result_str, "text/plain");
+            res.set_content(result_str, "text/plain; charset=UTF-8");
 
         } catch (const std::exception& e) {
             res.set_content("Invalid JSON data", "text/plain");
