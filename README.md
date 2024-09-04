@@ -191,7 +191,18 @@ GPU: Tornado后端
 ![benchmark3](docs/Throughput.png)
 
 
+# demo部署展示
 
+测试图片：
+
+![attn_is_all_you_need](scripts/attn.png)
+
+demo视频：
+
+<video controls>
+  <source src="docs/TrWebOCR.cpp-demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 
 # 鸣谢

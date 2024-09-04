@@ -70,7 +70,7 @@ void TrThreadPool::start(size_t numThreads) {
                         break;
 
                     task = std::move(task_queue.front().first);
-                    promise = task_queue.front().second;
+                    promise = std::move(task_queue.front().second);
                     task_queue.pop();
                 }
 
