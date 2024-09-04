@@ -11,7 +11,7 @@
 + [httplib](https://github.com/yhirose/cpp-httplib)：C++网络库，对于开发Pythonic backend的人比较友好，因为设计理念相近，基本上开箱即用。
 + [nlohmann/json](https://github.com/nlohmann/json)：json库，处理json数据的，非常方便。
 
-这三个C++库的设计都遵循`one header file only`，也就是仅仅只有一份头文件，只需要include就可以使用，极大地降低了环境配置与编译带来的心智负担。这三份代码我已经存放在`3rd_party`中，CMake也已经配置好，无需使用者自行拉取、链接、编译。
+这两个C++库的设计都遵循`one header file only`，也就是仅仅只有一份头文件，只需要include就可以使用，极大地降低了环境配置与编译带来的心智负担。这三份代码我已经存放在`3rd_party`中，CMake也已经配置好，无需使用者自行拉取、链接、编译。
 
 + [opencv](https://github.com/opencv/opencv)：主要用来读取图像文件，尝试了不同的轻量级读取图片库例如`stb_image`等，发现在读取图片的结果上与pillow、opencv的读取结果又出入。因为底层的`tr_run`处于黑盒状态，不知道它期待接收的图片数据是什么，所以采用了与原仓库中同样的读取手段。其实对于opencv库，我们用到的仅仅只有读取功能、转化灰度功能。
 
@@ -106,7 +106,7 @@ python test_api.py
 + [x] GPU support
 + [x] Flexible image serving
 + [ ] Support Chinese OCR.
-+ [ ] Image rotation C++ implement.
++ [ ] CUDA memory management.
 + [ ] Support ARM platform.
 + [ ] Build dockerfile.
 
