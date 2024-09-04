@@ -199,10 +199,7 @@ GPU: Tornado后端
 
 demo视频：
 
-<video controls>
-  <source src="docs/TrWebOCR.cpp-demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+![Demo](docs/v9lwq-5jjc7.gif)
 
 
 # 鸣谢
