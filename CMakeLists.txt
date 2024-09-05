@@ -31,8 +31,6 @@ set(CTPN_PATH \"${CMAKE_SOURCE_DIR}/tr/tr/ctpn.bin\")
 set(CRNN_PATH \"${CMAKE_SOURCE_DIR}/tr/tr/crnn.bin\")
 set(CUDA_LIBRARIES ${CUDA_CUDART_LIBRARY})
 
-add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
-
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
@@ -57,6 +55,7 @@ target_compile_definitions(main PRIVATE CRNN_PATH=${CRNN_PATH})
 
 # Link the shared library (libtr.so)
 if(USE_GPU)
+    add_definitions(-DUSE_GPU)
     target_link_libraries(main ${CMAKE_SOURCE_DIR}/tr/tr_gpu/libtr.so)
     target_link_libraries(main ${CMAKE_SOURCE_DIR}/tr/tr_gpu/libonnxruntime.so.1.3.0)
 else()

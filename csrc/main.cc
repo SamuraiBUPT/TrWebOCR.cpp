@@ -3,7 +3,10 @@
 #include <iostream>
 #include <chrono>
 #include <vector>
+
+#ifdef USE_GPU
 #include <cuda_runtime.h>
+#endif
 
 // use opencv
 #include <opencv2/opencv.hpp>
@@ -30,13 +33,7 @@ void tr_log(std::string& msg, std::string& level) {
     printf("[%s] [%s] %s\n", time_str.c_str(), level.c_str(), msg.c_str());
 }
 
-bool contains_keywords(const std::string& plain_text) {
-    return plain_text.find("年") != std::string::npos ||
-           plain_text.find("登记") != std::string::npos ||
-           plain_text.find("统一") != std::string::npos ||
-           plain_text.find("营") != std::string::npos;
-}
-
+#ifdef USE_GPU
 void clear_memory() {
     cudaError_t err = cudaDeviceReset();
     if (err != cudaSuccess) {
@@ -88,6 +85,7 @@ void monitor_thread(TrThreadPool& tp, int ctpn_id, int crnn_id) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));    // 1s监测一次
     }
 }
+#endif
 
 int main() {
     printf("Initializing TR binary...\n");
@@ -96,13 +94,19 @@ int main() {
     int port = 6006;
 
     // initialize jobs ...
+#ifdef USE_GPU
     resume_tr_libs(ctpn_id, crnn_id);
+#else
+    tr_init(0, ctpn_id, (void*)(CTPN_PATH), NULL);
+    tr_init(0, crnn_id, (void*)(CRNN_PATH), NULL);
+#endif
     TrThreadPool tr_task_pool(5);
     Server svr;
     std::vector<int> rotations = {0, 90, 270, 180};
     
-
+#ifdef USE_GPU
     std::thread gpu_mem_monitor(monitor_thread, std::ref(tr_task_pool), ctpn_id, crnn_id);
+#endif
 
     svr.Get("/hi", [](const Request& req, Response& res) {
         res.set_content("Hello World!", "text/plain");
@@ -111,9 +115,11 @@ int main() {
 
     svr.Post("/api/trocr", [&tr_task_pool, ctpn_id, crnn_id, &rotations](const Request& req, Response& res) {
         try {
+#ifdef USE_GPU
             while (isBlock.load()) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));  // 自旋等待block解除
             }
+#endif
 
             int width, height, channels;
             cv::Mat img;
@@ -147,45 +153,21 @@ int main() {
             // 现在开始核心的推理进程，旋转图像来看看到底是不是有用的数据
             auto start = std::chrono::high_resolution_clock::now();
             std::string plain_text;
-            bool direction_is_right = false;
 
-            for (int rotation:rotations) {
-                // 开始旋转
-                cv::Mat rotated_img;
-                plain_text = "";
-                if (rotation != 0) {
-                    // 获取旋转矩阵
-                    cv::Point2f center(gray_img.cols / 2.0, gray_img.rows / 2.0);
-                    cv::Mat rotation_matrix = cv::getRotationMatrix2D(center, rotation, 1.0);
+            plain_text = "";
 
-                    // 进行旋转，expand 参数相当于在这里选择大一点的边界来容纳旋转后的图像
-                    cv::warpAffine(gray_img, rotated_img, rotation_matrix, gray_img.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
-                } else {
-                    rotated_img = gray_img.clone();
-                }
+            width = gray_img.cols;
+            height = gray_img.rows;
+            channels = gray_img.channels();
 
-                int width = rotated_img.cols;
-                int height = rotated_img.rows;
-                int channels = rotated_img.channels();
-                unsigned char* image_data = rotated_img.data;
-                auto future = tr_task_pool.enqueue(image_data, height, width, channels, ctpn_id, crnn_id);
-                std::vector<TrResult> results = future.get();   // inference
+            unsigned char* image_data = gray_img.data;
+            auto future = tr_task_pool.enqueue(image_data, height, width, channels, ctpn_id, crnn_id);
+            std::vector<TrResult> results = future.get();   // inference
 
-                // 处理 OCR 结果
-                for (const auto& result : results) {
-                    std::string txt = std::get<1>(result);
-                    plain_text += txt + "|";
-                }
-
-                // 检查关键词
-                if (contains_keywords(plain_text)) {
-                    direction_is_right = true;
-                    break;  // 方向正确，停止旋转
-                }
-            }
-
-            if (!direction_is_right) {
-                plain_text += "-----------问题数据-----------";
+            // 处理 OCR 结果
+            for (const auto& result : results) {
+                std::string txt = std::get<1>(result);
+                plain_text += txt + "|";
             }
 
             res.set_content(plain_text, "text/plain; charset=UTF-8");
@@ -208,7 +190,9 @@ int main() {
 
     svr.listen("localhost", port);
 
+#ifdef USE_GPU
     gpu_mem_monitor.join();
+#endif
 
     return 0;
 }
