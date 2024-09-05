@@ -108,6 +108,7 @@ python test_api.py
 + [x] Support Chinese OCR.
 + [x] Support Image Rotation.
 + [ ] CUDA memory management.
++ [ ] CMake Macro: choose rotation, choose CUDA GC enabling or not.
 + [ ] Support ARM platform.
 + [ ] Build dockerfile.
 
