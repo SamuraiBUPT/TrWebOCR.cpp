@@ -19,57 +19,6 @@
 using json = nlohmann::json;
 using namespace httplib;
 
-void test_inference() {
-    int CV_TYPE = 0;
-    int flag = 2;
-    int max_lines = 512;
-    int max_width = 512;
-
-    auto allocate_start = std::chrono::high_resolution_clock::now();
-    float* rect = new float[max_lines * 6]();
-    int* unicode = new int[max_lines * max_width]();
-    float* prob = new float[max_lines * max_width]();
-    auto allocate_end = std::chrono::high_resolution_clock::now();
-
-    const char* img_path = "../img.png";
-    auto start = std::chrono::high_resolution_clock::now();
-
-    int line_num = tr_run_image_from_local(img_path, 0, 1, rect, unicode, prob);
-
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "耗时：" << duration.count() / 1000.0 << "毫秒" << std::endl;
-
-    std::cout << "检测到 " << line_num << " 行文本。" << std::endl;
-
-    std::vector<TrResult> results = process_results(line_num, rect, unicode, prob);
-
-    for (const auto& result : results) {
-        const auto& rect = std::get<0>(result);
-        const auto& txt = std::get<1>(result);
-        const auto& confidence = std::get<2>(result);
-
-        std::cout << "Rect: ";
-        for (float r : rect) {
-            std::cout << r << " ";
-        }
-        std::cout << ", Text: " << txt << ", Confidence: " << confidence << std::endl;
-    }
-
-
-    // 使用完成后释放内存
-    auto deallocate_start = std::chrono::high_resolution_clock::now();
-    delete[] rect;
-    delete[] unicode;
-    delete[] prob;
-    auto deallocate_end = std::chrono::high_resolution_clock::now();
-
-    auto allocate_duration = std::chrono::duration_cast<std::chrono::microseconds>(allocate_end - allocate_start);
-    auto deallocate_duration = std::chrono::duration_cast<std::chrono::microseconds>(deallocate_end - deallocate_start);
-    std::cout << "内存分配耗时：" << allocate_duration.count() / 1000.0 << "毫秒" << std::endl;
-    std::cout << "内存释放耗时：" << deallocate_duration.count() / 1000.0 << "毫秒" << std::endl;
-};
-
 std::string dump_headers(const Headers &headers) {
     std::string s;
     char buf[BUFSIZ];
@@ -143,6 +92,16 @@ std::string log(const Request &req, const Response &res) {
     return s;
 }
 
+void tr_log(std::string& msg, std::string& level) {
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
+    char buffer[100];
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", std::localtime(&now_time_t));
+    std::string time_str = std::string(buffer);
+
+    printf("[%s] [%s] %s\n", time_str.c_str(), level.c_str(), msg.c_str());
+}
+
 int main() {
     printf("Initializing TR binary...\n");
     int ctpn_id = 0;
@@ -155,7 +114,7 @@ int main() {
 
     TrThreadPool tr_task_pool(6);
 
-    int port = 8008;
+    int port = 6006;
     Server svr;
 
     svr.Get("/hi", [](const Request& req, Response& res) {
@@ -208,7 +167,11 @@ int main() {
             auto end = std::chrono::high_resolution_clock::now();
 
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-            std::cout << "time: " << duration.count() / 1000.0 << " ms" << std::endl;
+            
+            // log
+            std::string msg = std::string("Latency: ") + std::to_string(duration.count() / 1000.0) + " ms";
+            std::string level("INFO");
+            tr_log(msg, level);
 
             // 处理结果并返回响应
             std::string result_str;
