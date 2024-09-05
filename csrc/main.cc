@@ -50,28 +50,71 @@ void resume_tr_libs(int ctpn_id, int crnn_id) {
     tr_init(0, crnn_id, (void*)(CRNN_PATH), NULL);
 }
 
+std::atomic<bool> isBlock(false);
+
+void monitor_thread(TrThreadPool& tp, int ctpn_id, int crnn_id) {
+    while (true) {
+        size_t free_mem = 0, total_mem = 0;
+        cudaMemGetInfo(&free_mem, &total_mem);
+        size_t used_mem = total_mem - free_mem;
+        std::string level("INFO");
+
+        if (used_mem > total_mem * 0.7) {  // 超过90%时阻塞
+            std::string start_gc("Memory usage high, blocking requests...");
+            std::string end_gc("Memory cleared, resuming requests...");
+            tr_log(start_gc, level);
+
+            isBlock.store(true);  // 阻塞请求处理
+
+            while (true) {
+                if (tp.busy()) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                }
+                else {
+                    break;  // 不busy了就解除自旋
+                }
+            }
+
+            // 重置CUDA设备并清理显存
+            resume_tr_libs(ctpn_id, crnn_id);
+
+            tr_log(end_gc, level);
+            isBlock.store(false);  // 恢复请求处理
+        }
+
+        std::string regular_log_msg("Free gpu mem: ");
+        regular_log_msg += std::to_string(free_mem);
+        // tr_log(regular_log_msg, level);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));    // 1s监测一次
+    }
+}
+
 int main() {
     printf("Initializing TR binary...\n");
     int ctpn_id = 0;
     int crnn_id = 1;
-
-    resume_tr_libs(ctpn_id, crnn_id);
-    
-    // test_inference();
-
-    TrThreadPool tr_task_pool(12);
-
     int port = 6006;
+
+    // initialize jobs ...
+    resume_tr_libs(ctpn_id, crnn_id);
+    TrThreadPool tr_task_pool(5);
     Server svr;
+    std::vector<int> rotations = {0, 90, 270, 180};
+    
+
+    std::thread gpu_mem_monitor(monitor_thread, std::ref(tr_task_pool), ctpn_id, crnn_id);
 
     svr.Get("/hi", [](const Request& req, Response& res) {
         res.set_content("Hello World!", "text/plain");
     });
 
-    std::vector<int> rotations = {0, 90, 270, 180};
 
     svr.Post("/api/trocr", [&tr_task_pool, ctpn_id, crnn_id, &rotations](const Request& req, Response& res) {
         try {
+            while (isBlock.load()) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));  // 自旋等待block解除
+            }
+
             int width, height, channels;
             cv::Mat img;
 
@@ -164,6 +207,8 @@ int main() {
     printf("Server listening on http://localhost:%d\n", port);
 
     svr.listen("localhost", port);
+
+    gpu_mem_monitor.join();
 
     return 0;
 }

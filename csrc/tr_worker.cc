@@ -71,6 +71,7 @@ std::vector<TrResult> process_results(int line_num, float* rect_arr, int* unicod
 
 void TrThreadPool::start(size_t numThreads) {
     for (size_t i = 0; i < numThreads; ++i) {
+        // define thread function
         threads.emplace_back([=]() {
             // 每个线程持有的内存
             // TODO: 这里需要换成vector，方便做扩容、缩容。
@@ -81,6 +82,7 @@ void TrThreadPool::start(size_t numThreads) {
             while (true) {
                 TrTask task;
                 PromiseResult promise;
+                int task_id;
 
                 {
                     std::unique_lock<std::mutex> lock(eventMutex);
@@ -90,8 +92,9 @@ void TrThreadPool::start(size_t numThreads) {
                     if (stopFlag && task_queue.empty())
                         break;
 
-                    task = std::move(task_queue.front().first);
-                    promise = std::move(task_queue.front().second);
+                    task = std::move(std::get<0>(task_queue.front()));
+                    promise = std::move(std::get<1>(task_queue.front()));
+                    task_id = std::move(std::get<2>(task_queue.front()));
                     task_queue.pop();
                 }
 
@@ -100,12 +103,14 @@ void TrThreadPool::start(size_t numThreads) {
                 std::fill(unicode, unicode + 512 * 512, 0);
                 std::fill(prob, prob + 512 * 512, 0.0f);
 
-                // 执行任务，传递给 task 函数
+                // 执行任务，运行task
                 std::vector<TrResult> results = task(rect, unicode, prob);
 
                 if (promise) {
                     promise->set_value(results);  // 将结果设置给 promise
                 }
+
+                task_board.erase(task_id);
             }
 
             // 释放内存
@@ -128,18 +133,24 @@ void TrThreadPool::stop() {
         thread.join();
 }
 
+// note: this function may never be used.
 std::future<std::vector<TrResult>> TrThreadPool::enqueue(const char* image_path, int ctpn_id, int crnn_id) {
     auto promise = std::make_shared<std::promise<std::vector<TrResult>>>();
     auto future = promise->get_future();
 
     {
         std::unique_lock<std::mutex> lock(eventMutex);
+        task_id += 1;
+        task_board.insert(task_id);
+
+        // define the task function here
         task_queue.emplace([=](float* rect, int* unicode, float* prob) -> std::vector<TrResult>{
             int line_num = tr_run_image_from_local(image_path, ctpn_id, crnn_id, rect, unicode, prob);
             std::vector<TrResult> results = process_results(line_num, rect, unicode, prob);
-            // promise->set_value(results);  // 将结果设置给 promise
             return results;
-        }, promise);
+        }, 
+        promise, 
+        task_id);
     }
     eventVar.notify_one();
     return future;
@@ -151,6 +162,8 @@ std::future<std::vector<TrResult>> TrThreadPool::enqueue(unsigned char* image_da
 
     {
         std::unique_lock<std::mutex> lock(eventMutex);
+        task_id += 1;
+        task_board.insert(task_id);
         task_queue.emplace([=](float* rect, int* unicode, float* prob) -> std::vector<TrResult>{
             int CV_TYPE = channels == 1 ? 0 : 16;    // TODO: modify here
             // printf("CTYPE is: %d\n", CV_TYPE);
@@ -164,16 +177,32 @@ std::future<std::vector<TrResult>> TrThreadPool::enqueue(unsigned char* image_da
 
             // std::cout << "line_num: " << line_num << std::endl;
             return results;
-        }, promise);
+        }, 
+        promise, // enqueue the promise object
+        task_id);   // enqueue the task id
     }
     eventVar.notify_one();
     return future;
 }
 
 TrThreadPool::TrThreadPool(size_t numThreads) {
+    {
+        std::unique_lock<std::mutex> lock(eventMutex);
+        this->task_id = 0;
+    }
     start(numThreads);
 }
 
 TrThreadPool::~TrThreadPool() {
     stop();
+}
+
+bool TrThreadPool::busy() {
+    bool isBusy;
+    isBusy = task_board.empty();
+
+
+    // 如果空的时候，就是不busy，所以isBusy就是False
+    // 如果非空的时候，就是busy，所以isBusy就是True
+    return !isBusy;
 }
