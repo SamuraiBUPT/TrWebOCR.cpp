@@ -6,6 +6,7 @@
 #include <functional>
 #include <atomic>
 #include <tuple>
+#include <set>
 
 #include <future>
 
@@ -29,13 +30,18 @@ class TrThreadPool {
         std::future<std::vector<TrResult>> enqueue(const char* image_path, int ctpn_id, int crnn_id);
         // uint8_t类型的图像数据，实际上，就是unsigned char*，因为底层都是一样的
         std::future<std::vector<TrResult>> enqueue(unsigned char* image_data, int width, int height, int channels, int ctpn_id, int crnn_id);   
+
+        bool busy();
     
     private:
         std::vector<std::thread> threads;
         std::condition_variable eventVar;
         std::mutex eventMutex;
 
-        std::queue<std::pair<TrTask, PromiseResult>> task_queue;
+        std::set<uint64_t> task_board;
+        uint64_t task_id;
+
+        std::queue<std::tuple<TrTask, PromiseResult, uint64_t>> task_queue;
 
         std::atomic_bool stopFlag{false};
 

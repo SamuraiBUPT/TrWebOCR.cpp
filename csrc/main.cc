@@ -4,6 +4,10 @@
 #include <chrono>
 #include <vector>
 
+#ifdef USE_GPU
+#include <cuda_runtime.h>
+#endif
+
 // use opencv
 #include <opencv2/opencv.hpp>
 
@@ -19,79 +23,6 @@
 using json = nlohmann::json;
 using namespace httplib;
 
-std::string dump_headers(const Headers &headers) {
-    std::string s;
-    char buf[BUFSIZ];
-
-    for (const auto &x : headers) {
-        snprintf(buf, sizeof(buf), "%s: %s\n", x.first.c_str(), x.second.c_str());
-        s += buf;
-    }
-
-    return s;
-}
-
-std::string dump_multipart_files(const MultipartFormDataMap &files) {
-    std::string s;
-    char buf[BUFSIZ];
-
-    s += "--------------------------------\n";
-
-    for (const auto &x : files) {
-        const auto &name = x.first;
-        const auto &file = x.second;
-
-        snprintf(buf, sizeof(buf), "name: %s\n", name.c_str());
-        s += buf;
-
-        snprintf(buf, sizeof(buf), "filename: %s\n", file.filename.c_str());
-        s += buf;
-
-        snprintf(buf, sizeof(buf), "content type: %s\n", file.content_type.c_str());
-        s += buf;
-
-        snprintf(buf, sizeof(buf), "text length: %zu\n", file.content.size());
-        s += buf;
-
-        s += "----------------\n";
-    }
-
-    return s;
-}
-
-std::string log(const Request &req, const Response &res) {
-    std::string s;
-    char buf[BUFSIZ];
-
-    s += "================================\n";
-
-    snprintf(buf, sizeof(buf), "%s %s %s", req.method.c_str(),
-            req.version.c_str(), req.path.c_str());
-    s += buf;
-
-    std::string query;
-    for (auto it = req.params.begin(); it != req.params.end(); ++it) {
-        const auto &x = *it;
-        snprintf(buf, sizeof(buf), "%c%s=%s",
-                (it == req.params.begin()) ? '?' : '&', x.first.c_str(),
-                x.second.c_str());
-        query += buf;
-    }
-    snprintf(buf, sizeof(buf), "%s\n", query.c_str());
-    s += buf;
-
-    s += dump_headers(req.headers);
-    s += dump_multipart_files(req.files);
-
-    s += "--------------------------------\n";
-
-    snprintf(buf, sizeof(buf), "%d\n", res.status);
-    s += buf;
-    s += dump_headers(res.headers);
-
-    return s;
-}
-
 void tr_log(std::string& msg, std::string& level) {
     auto now = std::chrono::system_clock::now();
     std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
@@ -102,27 +33,94 @@ void tr_log(std::string& msg, std::string& level) {
     printf("[%s] [%s] %s\n", time_str.c_str(), level.c_str(), msg.c_str());
 }
 
+#ifdef USE_GPU
+void clear_memory() {
+    cudaError_t err = cudaDeviceReset();
+    if (err != cudaSuccess) {
+        std::cerr << "Error resetting CUDA device: " << cudaGetErrorString(err) << std::endl;
+    }
+}
+
+void resume_tr_libs(int ctpn_id, int crnn_id) {
+    clear_memory();
+    tr_init(0, ctpn_id, (void*)(CTPN_PATH), NULL);
+    tr_init(0, crnn_id, (void*)(CRNN_PATH), NULL);
+}
+
+std::atomic<bool> isBlock(false);
+
+void monitor_thread(TrThreadPool& tp, int ctpn_id, int crnn_id) {
+    while (true) {
+        size_t free_mem = 0, total_mem = 0;
+        cudaMemGetInfo(&free_mem, &total_mem);
+        size_t used_mem = total_mem - free_mem;
+        std::string level("INFO");
+
+        if (used_mem > total_mem * 0.7) {  // 超过90%时阻塞
+            std::string start_gc("Memory usage high, blocking requests...");
+            std::string end_gc("Memory cleared, resuming requests...");
+            tr_log(start_gc, level);
+
+            isBlock.store(true);  // 阻塞请求处理
+
+            while (true) {
+                if (tp.busy()) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                }
+                else {
+                    break;  // 不busy了就解除自旋
+                }
+            }
+
+            // 重置CUDA设备并清理显存
+            resume_tr_libs(ctpn_id, crnn_id);
+
+            tr_log(end_gc, level);
+            isBlock.store(false);  // 恢复请求处理
+        }
+
+        std::string regular_log_msg("Free gpu mem: ");
+        regular_log_msg += std::to_string(free_mem);
+        // tr_log(regular_log_msg, level);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));    // 1s监测一次
+    }
+}
+#endif
+
 int main() {
     printf("Initializing TR binary...\n");
     int ctpn_id = 0;
     int crnn_id = 1;
+    int port = 6006;
 
+    // initialize jobs ...
+#ifdef USE_GPU
+    resume_tr_libs(ctpn_id, crnn_id);
+#else
     tr_init(0, ctpn_id, (void*)(CTPN_PATH), NULL);
     tr_init(0, crnn_id, (void*)(CRNN_PATH), NULL);
-
-    // test_inference();
-
-    TrThreadPool tr_task_pool(6);
-
-    int port = 6006;
+#endif
+    TrThreadPool tr_task_pool(5);
     Server svr;
+    std::vector<int> rotations = {0, 90, 270, 180};
+    
+#ifdef USE_GPU
+    std::thread gpu_mem_monitor(monitor_thread, std::ref(tr_task_pool), ctpn_id, crnn_id);
+#endif
 
     svr.Get("/hi", [](const Request& req, Response& res) {
         res.set_content("Hello World!", "text/plain");
     });
 
-    svr.Post("/api/trocr", [&tr_task_pool, ctpn_id, crnn_id](const Request& req, Response& res) {
+
+    svr.Post("/api/trocr", [&tr_task_pool, ctpn_id, crnn_id, &rotations](const Request& req, Response& res) {
         try {
+#ifdef USE_GPU
+            while (isBlock.load()) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));  // 自旋等待block解除
+            }
+#endif
+
             int width, height, channels;
             cv::Mat img;
 
@@ -152,49 +150,49 @@ int main() {
             cv::Mat gray_img;
             cv::cvtColor(img, gray_img, cv::COLOR_BGR2GRAY);
 
+            // 现在开始核心的推理进程，旋转图像来看看到底是不是有用的数据
+            auto start = std::chrono::high_resolution_clock::now();
+            std::string plain_text;
+
+            plain_text = "";
+
             width = gray_img.cols;
             height = gray_img.rows;
             channels = gray_img.channels();
 
-            unsigned char* image_data = gray_img.data;  // 获取图像数据指针
-
-
-            // 现在开始处理图像数据
-            // 调用任务池中的任务接口（假设任务接口能够处理 image_data 指针）
-            auto start = std::chrono::high_resolution_clock::now();
+            unsigned char* image_data = gray_img.data;
             auto future = tr_task_pool.enqueue(image_data, height, width, channels, ctpn_id, crnn_id);
             std::vector<TrResult> results = future.get();   // inference
-            auto end = std::chrono::high_resolution_clock::now();
 
-            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-            
+            // 处理 OCR 结果
+            for (const auto& result : results) {
+                std::string txt = std::get<1>(result);
+                plain_text += txt + "|";
+            }
+
+            res.set_content(plain_text, "text/plain; charset=UTF-8");
+
             // log
+            auto end = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             std::string msg = std::string("Latency: ") + std::to_string(duration.count() / 1000.0) + " ms";
             std::string level("INFO");
             tr_log(msg, level);
 
-            // 处理结果并返回响应
-            std::string result_str;
-            for (const auto& result : results) {
-                std::vector<float> rect = std::get<0>(result);
-                std::string txt = std::get<1>(result);
-                // std::cout << txt << std::endl;
-                float confidence = std::get<2>(result);
-                result_str += txt + "\n";
-            }
-            res.set_content(result_str, "text/plain; charset=UTF-8");
 
         } catch (const std::exception& e) {
             res.set_content("Invalid JSON data", "text/plain");
         }
     });
 
-    // svr.set_logger(
-    //   [](const Request &req, const Response &res) { std::cout << log(req, res); });
 
     printf("Server listening on http://localhost:%d\n", port);
 
     svr.listen("localhost", port);
+
+#ifdef USE_GPU
+    gpu_mem_monitor.join();
+#endif
 
     return 0;
 }

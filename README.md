@@ -31,9 +31,21 @@
 
 `TrWebOCR.cpp`有如下特性：
 
++ **高性能OCR Web推理**
 + Update with Tr 2.8
 + 支持上传图片文件、图片base64编码
-+ 高性能OCR Web推理
++ 支持图像旋转
++ CUDA内存管理，规避`Out of Memory`问题。
+
+
+
+在推理过程中，随着上传的数据增多，底层的显存占用量会不断增长，直至最后发生OOM。这个是`TrWebOCR`中也存在的问题，cpp项目开发初期也遇到了这个问题，当时的方案就是：挂掉了又重启，但是这并不是长久之计。
+
+`TrWebOCR.cpp`的方案是：使用一个监视线程，结合CUDA API: `CUDADeviceReset()`，暴力解决这个问题。监视线程会定时检查显存占用情况，如果有OOM风险，会block住serving进展，进行重启之后，再开始继续serving。
+
+**这样做不会影响性能吗？**显然是会的，但是**比起不让服务挂掉、在生产环境稳定地跑数据，这个容灾措施是必要的。**
+
+> 补充：CUDA OOM问题是由于tr底层算子导致的。由于我们都不知道底层算子是怎么实现的、哪里有内存泄漏，所以对于上层的引擎来说，只能选择清空显存、重新load这样的操作来解决这个问题。
 
 
 
@@ -49,7 +61,7 @@ cd TrWebOCR.cpp
 git submodule update --init --recursive
 ```
 
-## Step 2: 安装opencv （如果已经安装了dev包，可以跳过这一步）
+## Step 2: 安装opencv、nvcc （如果已经安装了dev包，可以跳过这一步）
 通过这个指令一键安装opencv4：
 ```bash
 sudo apt install libopencv-dev
@@ -68,6 +80,22 @@ pkg-config --modversion opencv4
 ```
 
 就意味着安装成功了。
+
+
+
+__准备nvcc__
+
+如果您考虑使用GPU进行部署，那么必须要准备好`nvcc`，因为要对NV显卡进行显存清理操作。
+
+```bash
+nvcc -V
+```
+
+如果有正常输出，就说明环境没有问题；
+
+反之没有的话，需要配置nvcc相关环境。配置方法直接搜**安装cuda nvcc**之类的关键字即可。
+
+
 
 ## Step 3: 编译
 然后开始编译代码：
@@ -106,7 +134,9 @@ python test_api.py
 + [x] GPU support
 + [x] Flexible image serving
 + [x] Support Chinese OCR.
-+ [ ] CUDA memory management.
++ [x] Support Image Rotation.
++ [x] CUDA memory management.
++ [x] CMake Macro: choose rotation, choose CUDA GC enabling or not.
 + [ ] Support ARM platform.
 + [ ] Build dockerfile.
 
@@ -200,6 +230,14 @@ GPU: Tornado后端
 demo视频：
 
 ![Demo](docs/v9lwq-5jjc7.gif)
+
+
+
+进行显存管理、自动释放、重启的demo截图：
+
+![image-20240905213811147](docs/image-20240905213811147.png)
+
+
 
 
 # 鸣谢
