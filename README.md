@@ -106,6 +106,7 @@ python test_api.py
 + [x] GPU support
 + [x] Flexible image serving
 + [x] Support Chinese OCR.
++ [x] Support Image Rotation.
 + [ ] CUDA memory management.
 + [ ] Support ARM platform.
 + [ ] Build dockerfile.

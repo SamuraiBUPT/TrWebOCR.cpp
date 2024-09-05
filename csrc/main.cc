@@ -102,6 +102,13 @@ void tr_log(std::string& msg, std::string& level) {
     printf("[%s] [%s] %s\n", time_str.c_str(), level.c_str(), msg.c_str());
 }
 
+bool contains_keywords(const std::string& plain_text) {
+    return plain_text.find("年") != std::string::npos ||
+           plain_text.find("登记") != std::string::npos ||
+           plain_text.find("统一") != std::string::npos ||
+           plain_text.find("营") != std::string::npos;
+}
+
 int main() {
     printf("Initializing TR binary...\n");
     int ctpn_id = 0;
@@ -121,7 +128,9 @@ int main() {
         res.set_content("Hello World!", "text/plain");
     });
 
-    svr.Post("/api/trocr", [&tr_task_pool, ctpn_id, crnn_id](const Request& req, Response& res) {
+    std::vector<int> rotations = {0, 90, 270, 180};
+
+    svr.Post("/api/trocr", [&tr_task_pool, ctpn_id, crnn_id, &rotations](const Request& req, Response& res) {
         try {
             int width, height, channels;
             cv::Mat img;
@@ -152,37 +161,59 @@ int main() {
             cv::Mat gray_img;
             cv::cvtColor(img, gray_img, cv::COLOR_BGR2GRAY);
 
-            width = gray_img.cols;
-            height = gray_img.rows;
-            channels = gray_img.channels();
-
-            unsigned char* image_data = gray_img.data;  // 获取图像数据指针
-
-
-            // 现在开始处理图像数据
-            // 调用任务池中的任务接口（假设任务接口能够处理 image_data 指针）
+            // 现在开始核心的推理进程，旋转图像来看看到底是不是有用的数据
             auto start = std::chrono::high_resolution_clock::now();
-            auto future = tr_task_pool.enqueue(image_data, height, width, channels, ctpn_id, crnn_id);
-            std::vector<TrResult> results = future.get();   // inference
-            auto end = std::chrono::high_resolution_clock::now();
+            std::string plain_text;
+            bool direction_is_right = false;
 
-            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-            
+            for (int rotation:rotations) {
+                // 开始旋转
+                cv::Mat rotated_img;
+                plain_text = "";
+                if (rotation != 0) {
+                    // 获取旋转矩阵
+                    cv::Point2f center(gray_img.cols / 2.0, gray_img.rows / 2.0);
+                    cv::Mat rotation_matrix = cv::getRotationMatrix2D(center, rotation, 1.0);
+
+                    // 进行旋转，expand 参数相当于在这里选择大一点的边界来容纳旋转后的图像
+                    cv::warpAffine(gray_img, rotated_img, rotation_matrix, gray_img.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+                } else {
+                    rotated_img = gray_img.clone();
+                }
+
+                int width = rotated_img.cols;
+                int height = rotated_img.rows;
+                int channels = rotated_img.channels();
+                unsigned char* image_data = rotated_img.data;
+                auto future = tr_task_pool.enqueue(image_data, height, width, channels, ctpn_id, crnn_id);
+                std::vector<TrResult> results = future.get();   // inference
+
+                // 处理 OCR 结果
+                for (const auto& result : results) {
+                    std::string txt = std::get<1>(result);
+                    plain_text += txt + "|";
+                }
+
+                // 检查关键词
+                if (contains_keywords(plain_text)) {
+                    direction_is_right = true;
+                    break;  // 方向正确，停止旋转
+                }
+            }
+
+            if (!direction_is_right) {
+                plain_text += "-----------问题数据-----------";
+            }
+
+            res.set_content(plain_text, "text/plain; charset=UTF-8");
+
             // log
+            auto end = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             std::string msg = std::string("Latency: ") + std::to_string(duration.count() / 1000.0) + " ms";
             std::string level("INFO");
             tr_log(msg, level);
 
-            // 处理结果并返回响应
-            std::string result_str;
-            for (const auto& result : results) {
-                std::vector<float> rect = std::get<0>(result);
-                std::string txt = std::get<1>(result);
-                // std::cout << txt << std::endl;
-                float confidence = std::get<2>(result);
-                result_str += txt + "\n";
-            }
-            res.set_content(result_str, "text/plain; charset=UTF-8");
 
         } catch (const std::exception& e) {
             res.set_content("Invalid JSON data", "text/plain");
