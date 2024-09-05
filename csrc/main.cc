@@ -3,6 +3,7 @@
 #include <iostream>
 #include <chrono>
 #include <vector>
+#include <cuda_runtime.h>
 
 // use opencv
 #include <opencv2/opencv.hpp>
@@ -18,79 +19,6 @@
 
 using json = nlohmann::json;
 using namespace httplib;
-
-std::string dump_headers(const Headers &headers) {
-    std::string s;
-    char buf[BUFSIZ];
-
-    for (const auto &x : headers) {
-        snprintf(buf, sizeof(buf), "%s: %s\n", x.first.c_str(), x.second.c_str());
-        s += buf;
-    }
-
-    return s;
-}
-
-std::string dump_multipart_files(const MultipartFormDataMap &files) {
-    std::string s;
-    char buf[BUFSIZ];
-
-    s += "--------------------------------\n";
-
-    for (const auto &x : files) {
-        const auto &name = x.first;
-        const auto &file = x.second;
-
-        snprintf(buf, sizeof(buf), "name: %s\n", name.c_str());
-        s += buf;
-
-        snprintf(buf, sizeof(buf), "filename: %s\n", file.filename.c_str());
-        s += buf;
-
-        snprintf(buf, sizeof(buf), "content type: %s\n", file.content_type.c_str());
-        s += buf;
-
-        snprintf(buf, sizeof(buf), "text length: %zu\n", file.content.size());
-        s += buf;
-
-        s += "----------------\n";
-    }
-
-    return s;
-}
-
-std::string log(const Request &req, const Response &res) {
-    std::string s;
-    char buf[BUFSIZ];
-
-    s += "================================\n";
-
-    snprintf(buf, sizeof(buf), "%s %s %s", req.method.c_str(),
-            req.version.c_str(), req.path.c_str());
-    s += buf;
-
-    std::string query;
-    for (auto it = req.params.begin(); it != req.params.end(); ++it) {
-        const auto &x = *it;
-        snprintf(buf, sizeof(buf), "%c%s=%s",
-                (it == req.params.begin()) ? '?' : '&', x.first.c_str(),
-                x.second.c_str());
-        query += buf;
-    }
-    snprintf(buf, sizeof(buf), "%s\n", query.c_str());
-    s += buf;
-
-    s += dump_headers(req.headers);
-    s += dump_multipart_files(req.files);
-
-    s += "--------------------------------\n";
-
-    snprintf(buf, sizeof(buf), "%d\n", res.status);
-    s += buf;
-    s += dump_headers(res.headers);
-
-    return s;
-}
 
 void tr_log(std::string& msg, std::string& level) {
     auto now = std::chrono::system_clock::now();
@@ -109,17 +37,29 @@ bool contains_keywords(const std::string& plain_text) {
            plain_text.find("营") != std::string::npos;
 }
 
+void clear_memory() {
+    cudaError_t err = cudaDeviceReset();
+    if (err != cudaSuccess) {
+        std::cerr << "Error resetting CUDA device: " << cudaGetErrorString(err) << std::endl;
+    }
+}
+
+void resume_tr_libs(int ctpn_id, int crnn_id) {
+    clear_memory();
+    tr_init(0, ctpn_id, (void*)(CTPN_PATH), NULL);
+    tr_init(0, crnn_id, (void*)(CRNN_PATH), NULL);
+}
+
 int main() {
     printf("Initializing TR binary...\n");
     int ctpn_id = 0;
     int crnn_id = 1;
 
-    tr_init(0, ctpn_id, (void*)(CTPN_PATH), NULL);
-    tr_init(0, crnn_id, (void*)(CRNN_PATH), NULL);
-
+    resume_tr_libs(ctpn_id, crnn_id);
+    
     // test_inference();
 
-    TrThreadPool tr_task_pool(6);
+    TrThreadPool tr_task_pool(12);
 
     int port = 6006;
     Server svr;
@@ -220,8 +160,6 @@ int main() {
         }
     });
 
-    // svr.set_logger(
-    //   [](const Request &req, const Response &res) { std::cout << log(req, res); });
 
     printf("Server listening on http://localhost:%d\n", port);
 
