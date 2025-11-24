@@ -56,13 +56,15 @@
 首先把仓库clone下来，并且拉取git submodules (也就是Tr)：
 
 ```bash
-git clone https://github.com/SamuraiBUPT/TrWebOCR.cpp.git
+# 跳过历史commit, 仅仅clone最新version
+git clone https://github.com/SamuraiBUPT/TrWebOCR.cpp.git --depth 1
 cd TrWebOCR.cpp
 git submodule update --init --recursive
 ```
 
 ## Step 2: 安装opencv、nvcc （如果已经安装了dev包，可以跳过这一步）
 通过这个指令一键安装opencv4：
+
 ```bash
 sudo apt install libopencv-dev
 ```
@@ -79,7 +81,7 @@ pkg-config --modversion opencv4
 4.2.0
 ```
 
-就意味着安装成功了。
+或者其他版本号，就意味着安装成功了。
 
 
 
@@ -99,6 +101,8 @@ nvcc -V
 
 ## Step 3: 编译
 然后开始编译代码：
+
+注意，因为Tr项目本身是只兼容 SM80 以下的GPU，因此我们不声明cuda arch，默认使用SM70 的GPU。
 
 ```bash
 mkdir build && cd build

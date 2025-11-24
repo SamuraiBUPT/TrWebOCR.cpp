@@ -2,8 +2,8 @@
 
 cmake_minimum_required(VERSION 3.10)
 
-# Set the project name
-project(TrWebOCRcpp)
+# Set the project name (only C++ is needed, so skip C compiler checks)
+project(TrWebOCRcpp LANGUAGES CXX)
 
 find_package(CUDA REQUIRED)
 set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -gencode arch=compute_70,code=sm_70")
